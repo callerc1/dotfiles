@@ -17,7 +17,7 @@ SUBLIME_PACKAGES_DIR="${SUBLIME_DIR}/Packages"
 mkdir -p "${SUBLIME_PACKAGES_DIR}"
 
 # backup old settings folder
-if [ -f "${SUBLIME_PACKAGES_DIR}/User" ]; then
+if [ -d "${SUBLIME_PACKAGES_DIR}/User" ]; then
 	mv "${SUBLIME_PACKAGES_DIR}/User" "${SUBLIME_PACKAGES_DIR}/User.backup"
 fi
 
