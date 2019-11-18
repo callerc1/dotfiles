@@ -14,7 +14,7 @@ brew update && brew upgrade
 
 print_block "Updating Brewfile"
 
-HOMEBREW_BUNDLE_CASK_SKIP=true brew bundle dump --file=$DOTFILES/homebrew/Brewfile --force --no-lock --no-restart
+brew bundle dump --file=$DOTFILES/homebrew/Brewfile --force --no-lock --no-restart
 brew bundle list --file=$DOTFILES/homebrew/Brewfile --all
 
 # And we're done
