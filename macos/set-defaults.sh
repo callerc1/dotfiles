@@ -23,21 +23,26 @@ else
   exit 0
 fi
 
+# Close any open System Preferences panes, to prevent them from overriding
+# settings we’re about to change
+osascript -e 'tell application "System Preferences" to quit'
+
 # Ask for the administrator password upfront
 sudo -v
 
-# Set the default shell to zsh
-sudo chsh -s /bin/zsh `whoami`
-
-# # Keep-alive: update existing `sudo` time stamp until we're done
+# Keep-alive: update existing `sudo` time stamp until `.macos` has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
+# Set the default shell to zsh
+if [ "$(echo $SHELL)" != "/bin/zsh" ]; then
+  sudo chsh -s /bin/zsh `whoami`
+fi
 
 # find all the .macos default files and then run them iteratively
 default_files=( $(find . -name "*.macos" ) )
 
 # create an array of the apps we should now kill
-# apps=(SystemUIServer cfprefsd)
-apps=()
+apps=(SystemUIServer cfprefsd)
 for file in "${default_files[@]}"
 do
   # run each script
