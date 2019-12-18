@@ -1,6 +1,7 @@
 browser-sync
 eslint
 expo-cli
+gatsby-cli
 http-server
 nativefier
 terminalizer

@@ -9,6 +9,7 @@ Equinusocio.vsc-material-theme
 esbenp.prettier-vscode
 file-icons.file-icons
 frigus02.vscode-sql-tagged-template-literals
+jetmartin.bats
 johnpapa.vscode-peacock
 jpoissonnier.vscode-styled-components
 karigari.chat
@@ -22,6 +23,7 @@ ms-vsliveshare.vsliveshare
 ms-vsliveshare.vsliveshare-audio
 ms-vsliveshare.vsliveshare-pack
 PKief.material-icon-theme
+sainoba.px-to-rem
 shardulm94.trailing-spaces
 silvenon.mdx
 streetsidesoftware.code-spell-checker
