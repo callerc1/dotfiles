@@ -99,5 +99,7 @@
   "gitlens.codeLens.enabled": false,
   "cSpell.language": "en-GB",
   "markdown.extension.toc.githubCompatibility": true,
-  "editor.multiCursorModifier": "ctrlCmd"
+  "editor.multiCursorModifier": "ctrlCmd",
+  "eslint.enable": false,
+  "javascript.updateImportsOnFileMove.enabled": "always"
 }
