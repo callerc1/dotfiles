@@ -5,6 +5,8 @@ set -e
 # Include the general functions
 . ./functions/general
 
+print_block "Updating vscode extensions"
+
 DOTFILES_VSCODE_DIR="$DOTFILES/vscode"
 
 # Load list of vscode extensions to update from the extensions file
