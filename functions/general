@@ -69,6 +69,39 @@ print_error () {
   printf "$cRed$1 $cYellow$2$cNo\n"
 }
 
+# echo each item of array on new line
+print_array () {
+  for item in "${@:1}"; do
+    echo $item
+  done
+}
+
+# Removes items from array
+filter_array () {
+  local filtered_array=()
+  local filter=$1
+  local exclude=$2
+
+  for item in "${@:3}"; do
+    grep -q $filter <<<$item
+    if [ $? -eq $exclude ]; then
+      filtered_array+=($item)
+    fi
+  done
+
+  echo "${filtered_array[@]}"
+}
+
+# Removes items from array which do NOT contain substring when exclude is true
+filter_array_include () {
+  filter_array "${1}" 0 "${@:2}"
+}
+
+# Removes items from array which contain substring when exclude is false
+filter_array_exclude () {
+  filter_array "${1}" 1 "${@:2}"
+}
+
 # check if a command exists
 command_exists () {
   type "$1" &> /dev/null ;
@@ -82,11 +115,11 @@ user () {
   printf "\r  [ \033[0;33m?\033[0m ] $1 "
 }
 
-success () {
+print_success () {
   printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
 }
 
-fail () {
+print_fail () {
   printf "\r\033[2K  [\033[0;31mFAIL\033[0m] $1\n"
   echo ''
   exit
@@ -111,4 +144,20 @@ cask_install() {
 cask_reinstall() {
   print_task "Installing ${@} (with force)"
   brew cask install --force "${@}"
+}
+
+# source a file, but only if it exists
+source_file() {
+  if [[ -a $1 ]]; then
+    # shellcheck source=src.sh
+    source $1
+    verboseOut "sourced: ${1}"
+  fi
+}
+
+# source array of files, but only if it exists
+source_files() {
+  for file in "${@:1}"; do
+    source_file $file
+  done
 }

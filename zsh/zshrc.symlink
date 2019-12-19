@@ -1,68 +1,64 @@
-# Profiling
-# Run this to check time : `for i in $(seq 1 10); do /usr/bin/time $SHELL -i -c exit; done`
-#zmodload zsh/zprof
+#!/bin/bash
+
+# uncomment for debugging:
+# export profiling=true     # profile zsh startup
+# export verbose=true       # more verbose output
+
+# start profiling if enabled
+if [ "$profiling" = true ]; then
+  zmodload zsh/zprof
+  # Run this to check time : `for i in $(seq 1 10); do /usr/bin/time $SHELL -i -c exit; done`
+fi
 
 export LC_CTYPE="en_GB.UTF-8"
 export LC_ALL="en_GB.UTF-8"
 export LANG="en_GB"
 
-# use .localrc for SUPER SECRET CRAP that you don't
-# want in your public, versioned repo.
-if [[ -a ~/.localrc ]]
+# add default $DOTFILES
+if [[ ! $DOTFILES ]]
 then
-  source ~/.localrc
+  DOTFILES="${HOME}/.dotfiles/"
 fi
+# shellcheck source=$DOTFILES/functions/general
+. $DOTFILES/functions/general
+
+# use .localrc for SUPER SECRET CRAP that you don't # want in your public, versioned repo.
+source_file ~/.localrc
 
 # using .commonrc for stuff you want shared between zsh and bash
-if [[ -a ~/.commonrc ]]
-then
-  source ~/.commonrc
-fi
-
+source_file ~/.commonrc
 
 # all of our zsh files
 typeset -U config_files
-# setopt extended_glob
-# config_files=($DOTFILES/(^vendor/)#/*.zsh) # with extended glob
 config_files=($DOTFILES/(**|^vendor)/*.zsh)
+config_files_misc=("${config_files[@]}")
 
 # load the path files
-for file in ${(M)config_files:#*/path.zsh}
-do
-  source $file
-done
+# source_files ${(M)config_files:#*/path.zsh}
+config_files_path=($(filter_array_include "/path.zsh" "${config_files[@]}"))
+source_files "${config_files_path[@]}"
 
-# include bash aliases (overridden by any ohmyzsh plugins and other aliases)
-. ~/.aliases
-
-# include bash functions
-. ~/.functions
+# include bash aliases (overridden by any ohmyzsh plugins and other aliases) & functions
+source_file ~/.aliases
+source_file ~/.functions
 
 # load everything but the path, completion and aliases files
-for file in ${${${config_files:#*/path.zsh}:#*/completion.zsh}:#*/aliases.zsh}
-do
-  #echo "*.zsh :  $file"
-  source $file
-done
+config_files_misc=($(filter_array_exclude "/path.zsh" "${config_files_misc[@]}"))
+config_files_misc=($(filter_array_exclude "/completion.zsh" "${config_files_misc[@]}"))
+config_files_misc=($(filter_array_exclude "/aliases.zsh" "${config_files_misc[@]}"))
+source_files "${config_files_misc[@]}"
 
 # initialize autocomplete here, otherwise functions won't be loaded
-autoload -U compinit
-compinit
+# autoload -U compinit
+# compinit
 
 # load every completion after autocomplete loads
-for file in ${(M)config_files:#*/completion.zsh}
-do
-  source $file
-done
+config_files_completion=($(filter_array_include "/completion.zsh" "${config_files[@]}"))
+source_files "${config_files_completion[@]}"
 
 # load all the aliases
-for file in ${(M)config_files:#*/aliases.zsh}
-do
-  #echo "just aliases :  $file"
-  source $file
-done
-
-unset config_files
+config_files_aliases=($(filter_array_include "/aliases.zsh" "${config_files[@]}"))
+source_files "${config_files_aliases[@]}"
 
 # Lazy Load NVM
 . $DOTFILES/functions/lazy-nvm
@@ -73,5 +69,11 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
 [ -n "$PS1" ] && \
     [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
         eval "$("$BASE16_SHELL/profile_helper.sh")"
-# Profiling
-#zprof
+
+# end profiling if profiling is enabled
+if [ "$profiling" = true ]; then
+  zprof
+fi
+
+# cleanup variables
+unset config_files config_files_misc config_files_path config_files_completion config_files_aliases verbose profiling
