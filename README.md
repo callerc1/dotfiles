@@ -45,6 +45,12 @@ script/bootstrap
   script/install
 ```
 
+### Submodules
+
+```bash
+  git submodule update --init --recursive --remote
+```
+
 ## Topical
 
 Everything's built around topic areas. If you're adding a new area to your
