@@ -29,6 +29,7 @@ fi
 print_block "Installing brew packages from Brewfile"
 
 echo "› brew bundle"
+brew bundle --file=$DOTFILES/homebrew/Brewfile
 brew bundle dump --file=$DOTFILES/homebrew/Brewfile --force --no-lock --no-restart
 
 # And we're done
