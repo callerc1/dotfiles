@@ -64,12 +64,6 @@ source_files "${config_files_aliases[@]}"
 . $DOTFILES/functions/lazy-nvm
 add-zsh-hook chpwd load-nvmrc
 
-# Base16 Shell
-BASE16_SHELL="$HOME/.config/base16-shell/"
-[ -n "$PS1" ] && \
-    [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
-        eval "$("$BASE16_SHELL/profile_helper.sh")"
-
 # end profiling if profiling is enabled
 if [ "$profiling" = true ]; then
   zprof
